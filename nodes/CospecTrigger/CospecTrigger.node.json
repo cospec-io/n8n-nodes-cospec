@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-cospec.cospecTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Developer Tools"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://www.cospec.io/docs/api-keys"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://www.cospec.io/docs/public-api"
+			}
+		]
+	}
+}

@@ -1,17 +1,17 @@
 {
-	"node": "n8n-nodes-cospec",
+	"node": "n8n-nodes-cospec.cospec",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Development", "Developer Tools"],
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://github.com/org/repo?tab=readme-ov-file#credentials"
+				"url": "https://www.cospec.io/docs/api-keys"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://github.com/org/repo?tab=readme-ov-file"
+				"url": "https://www.cospec.io/docs/public-api"
 			}
 		]
 	}

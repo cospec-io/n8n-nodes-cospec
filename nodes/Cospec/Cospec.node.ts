@@ -1,7 +1,9 @@
 import type {
 	IDataObject,
 	IExecuteFunctions,
+	ILoadOptionsFunctions,
 	INodeExecutionData,
+	INodePropertyOptions,
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
@@ -185,13 +187,14 @@ export class Cospec implements INodeType {
 				displayOptions: { show: { operation: ['Create Run'] } },
 			},
 			{
-				displayName: 'Template',
+				displayName: 'Template Name or ID',
 				name: 'template',
-				type: 'string',
+				type: 'options',
+				typeOptions: { loadOptionsMethod: 'getTemplates' },
 				required: true,
-				default: 'node',
-				placeholder: 'node',
-				description: 'Template slug or ID (e.g., node, python-3.12)',
+				default: '',
+				description:
+					'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				displayOptions: { show: { operation: ['Create Run'] } },
 			},
 
@@ -307,6 +310,20 @@ export class Cospec implements INodeType {
 				displayOptions: { show: { operation: ['Get Run'] } },
 			},
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			async getTemplates(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const response = await cospecApiRequest.call(this, 'GET', '/v1/templates');
+				const templates = (response.data ?? []) as IDataObject[];
+
+				return templates.map((t) => ({
+					name: `${t.name as string} (${t.slug as string})`,
+					value: t.slug as string,
+				}));
+			},
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {

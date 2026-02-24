@@ -35,6 +35,7 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 - **Wait for Completion** — Poll until the run finishes (default: true)
 - **Guardrails** — Timeout, max turns, max cost limits
 - **Environment Variables** — Key-value pairs passed to the sandbox
+- **Metadata** — Key-value pairs echoed back in webhook callbacks (for cross-workflow correlation)
 
 ### coSPEC Trigger
 
@@ -48,19 +49,25 @@ Starts a workflow when an agent run completes, fails, or is cancelled. Uses webh
 
 ### Output Fields
 
-Both nodes output the run object with convenience fields:
+Both nodes output the run object with grouped output fields:
 
 | Field | Example |
 |-------|---------|
 | `status` | `completed`, `failed`, `cancelled` |
-| `prUrl` | `https://github.com/owner/repo/pull/42` |
-| `prTitle` | Fix login validation bug |
-| `prNumber` | 42 |
-| `issueUrl` | `https://github.com/owner/repo/issues/10` |
-| `branchName` | `fix/login-bug` |
-| `outputSummary` | First text output content |
-| `usage.totalCostUsd` | 1.23 |
 | `failReason` | `null`, `error`, `max_turns`, `max_cost`, `timeout` |
+| `pr.url` | `https://github.com/owner/repo/pull/42` |
+| `pr.title` | Fix login validation bug |
+| `pr.number` | 42 |
+| `issue.url` | `https://github.com/owner/repo/issues/10` |
+| `issue.title` | Login bug |
+| `issue.number` | 10 |
+| `branch.name` | `fix/login-bug` |
+| `summary` | First text output content |
+| `usage.totalCostUsd` | 1.23 |
+| `metadata` | Key-value pairs from the request (or `null`) |
+| `outputs` | Raw outputs array (for advanced use) |
+
+Grouped fields (`pr`, `issue`, `branch`) are objects when present, `null` when absent.
 
 ## Credentials
 

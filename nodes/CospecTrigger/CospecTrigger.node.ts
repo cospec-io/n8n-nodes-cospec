@@ -82,7 +82,11 @@ async function deleteWebhook(this: IHookFunctions): Promise<boolean> {
 // ---------------------------------------------------------------------------
 
 function buildTriggerOutput(body: IDataObject): IDataObject {
-	const run = body.run as IDataObject;
+	const run = body.run as IDataObject | undefined;
+
+	if (!run) {
+		return { event: body.event, timestamp: body.timestamp };
+	}
 
 	return {
 		event: body.event,

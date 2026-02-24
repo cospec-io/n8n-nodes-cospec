@@ -23,6 +23,9 @@ export async function cospecApiRequest(
 		method,
 		url: `${baseUrl}${path}`,
 		json: true,
+		headers: {
+			'X-Cospec-Source': 'n8n',
+		},
 	};
 
 	if (body) {
@@ -97,9 +100,8 @@ function extractFromBody(data: Record<string, unknown>): string | undefined {
 }
 
 /**
- * Extracts convenience fields from the polymorphic outputs[] array.
- * No-code users map prUrl, branchName, etc. directly instead of
- * filtering outputs[] by type.
+ * Builds a clean output from the run object.
+ * Groups outputs[] by type into structured objects and strips internal fields.
  */
 const INTERNAL_FIELDS = new Set([
 	'callbackUrl',
@@ -125,13 +127,9 @@ export function flattenRunOutput(run: IDataObject): IDataObject {
 
 	return {
 		...filtered,
-		prUrl: pr?.url ?? null,
-		prTitle: pr?.title ?? null,
-		prNumber: pr?.number ?? null,
-		issueUrl: issue?.url ?? null,
-		issueTitle: issue?.title ?? null,
-		issueNumber: issue?.number ?? null,
-		branchName: branch?.name ?? null,
-		outputSummary: text?.content ?? null,
+		pr: pr ? { url: pr.url, title: pr.title, number: pr.number } : null,
+		issue: issue ? { url: issue.url, title: issue.title, number: issue.number } : null,
+		branch: branch ? { name: branch.name } : null,
+		summary: (text?.content as string) ?? null,
 	};
 }

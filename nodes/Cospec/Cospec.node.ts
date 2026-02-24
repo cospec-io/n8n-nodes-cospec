@@ -68,6 +68,7 @@ function buildRequestBody(this: IExecuteFunctions, itemIndex: number): IDataObje
 	}
 
 	appendEnvVars.call(this, body, itemIndex);
+	appendMetadata.call(this, body, itemIndex);
 
 	return body;
 }
@@ -87,6 +88,23 @@ function appendEnvVars(
 		env[entry.key as string] = entry.value as string;
 	}
 	body.env = env;
+}
+
+function appendMetadata(
+	this: IExecuteFunctions,
+	body: IDataObject,
+	itemIndex: number,
+): void {
+	const metadataData = this.getNodeParameter('metadata', itemIndex, {}) as IDataObject;
+	if (!metadataData.values || !Array.isArray(metadataData.values)) {
+		return;
+	}
+
+	const metadata: Record<string, string> = {};
+	for (const entry of metadataData.values as IDataObject[]) {
+		metadata[entry.key as string] = entry.value as string;
+	}
+	body.metadata = metadata;
 }
 
 function getTimeoutSeconds(this: IExecuteFunctions, itemIndex: number): number {
@@ -292,6 +310,41 @@ export class Cospec implements INodeType {
 								name: 'value',
 								type: 'string',
 								default: '',
+							},
+						],
+					},
+				],
+			},
+
+			// -- Create Run: metadata --
+			{
+				displayName: 'Metadata',
+				name: 'metadata',
+				type: 'fixedCollection',
+				typeOptions: { multipleValues: true },
+				default: {},
+				placeholder: 'Add Metadata',
+				description:
+					'Key-value pairs echoed back in webhook callbacks. Use for cross-workflow correlation. Max 4 KB.',
+				displayOptions: { show: { operation: ['Create Run'] } },
+				options: [
+					{
+						name: 'values',
+						displayName: 'Metadata',
+						values: [
+							{
+								displayName: 'Key',
+								name: 'key',
+								type: 'string',
+								default: '',
+								placeholder: 'slackChannel',
+							},
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'string',
+								default: '',
+								placeholder: 'C123',
 							},
 						],
 					},

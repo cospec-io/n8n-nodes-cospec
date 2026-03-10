@@ -1,6 +1,6 @@
 {
     "name": "n8n-nodes-cospec",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "n8n community nodes for coSPEC - AI coding agent runs",
     "license": "MIT",
     "homepage": "https://cospec.io",

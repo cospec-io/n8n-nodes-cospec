@@ -184,13 +184,14 @@ export class Cospec implements INodeType {
 
 			// -- Create Run: required fields --
 			{
-				displayName: 'Repository',
+				displayName: 'Repository Name or ID',
 				name: 'repo',
-				type: 'string',
+				type: 'options',
+				typeOptions: { loadOptionsMethod: 'getRepositories' },
 				required: true,
 				default: '',
-				placeholder: 'owner/repo',
-				description: 'GitHub repository (owner/repo format or full URL)',
+				description:
+					'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				displayOptions: { show: { operation: ['Create Run'] } },
 			},
 			{
@@ -374,6 +375,18 @@ export class Cospec implements INodeType {
 				return templates.map((t) => ({
 					name: `${t.name as string} (${t.slug as string})`,
 					value: t.slug as string,
+				}));
+			},
+
+			async getRepositories(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const response = await cospecApiRequest.call(
+					this, 'GET', '/v1/repositories', undefined, { limit: 100 },
+				);
+				const repos = (response.data ?? []) as IDataObject[];
+
+				return repos.map((r) => ({
+					name: r.fullName as string,
+					value: r.fullName as string,
 				}));
 			},
 		},

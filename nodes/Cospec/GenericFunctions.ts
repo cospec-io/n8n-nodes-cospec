@@ -15,6 +15,7 @@ export async function cospecApiRequest(
 	method: IHttpRequestMethods,
 	path: string,
 	body?: IDataObject,
+	qs?: IDataObject,
 ): Promise<IDataObject> {
 	const credentials = await this.getCredentials('cospecApi');
 	const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
@@ -30,6 +31,10 @@ export async function cospecApiRequest(
 
 	if (body) {
 		options.body = body;
+	}
+
+	if (qs) {
+		options.qs = qs;
 	}
 
 	try {
